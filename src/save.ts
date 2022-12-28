@@ -172,42 +172,52 @@ export class GameSave {
     // Trainer Flags
     // Trainer flags occupy 0x500 - 0x85F, the last 9 of which are unused
 
-    CheckFlagIndexInRange(flagIndex: number) {
+    // Confirms that the offset is 16 bits or less
+    CheckFlagIndexInRange(flagIndex: number): boolean {
         if(flagIndex > 0xFFFF) throw "Outside of the range of possible flags."
-        return flagIndex <= 0xFFFF
+        return true
     }
 
-    GetFlagByteOffset(flagIndex: number) {
+    GetFlagByteOffset(flagIndex: number): number {
         // This is probably also possible with a bitwise operation
         // but that's irrelevant and harder to read
         // Assume zero-indexed
         return Math.floor(flagIndex / 8)
     }
 
-    GetFlagBitSelector(flagIndex: number) {
+    // Calculates a "bit selector" that allows choosing a specific bit
+    // in a byte.
+    // It can be seen as a bitshift of the mod 8 of flagIndex or
+    // 1 << (flagIndex % 8)
+    // flagIndex mod 8 and little-endian allows for a clever bitshift
+    GetFlagBitSelector(flagIndex: number): number {
         return 1 << (flagIndex & 7)
     }
 
-    GetFlag(flagIndex: number) {
+    // Fetches flag as boolean
+    GetFlag(flagIndex: number): boolean {
         this.CheckFlagIndexInRange(flagIndex)
         let byteOffset = this.GetFlagByteOffset(flagIndex)
         let bitSelector = this.GetFlagBitSelector(flagIndex)
-        // 
+        // Any nonzero number evaluates is "truthy", and evaluates to
+        // true when typecast
         return Boolean(this.saveData[byteOffset] & bitSelector)
     }
 
-    SetFlag(flagIndex: number) {
+    SetFlag(flagIndex: number): void {
         this.CheckFlagIndexInRange(flagIndex)
         let byteOffset = this.GetFlagByteOffset(flagIndex)
         let bitSelector = this.GetFlagBitSelector(flagIndex)
         this.saveData[byteOffset] |= bitSelector
     }
 
-    ClearFlag(flagIndex: number) {
+    ClearFlag(flagIndex: number): void {
         if(this.CheckFlagIndexInRange(flagIndex)) throw "Outside of the scope of possible flags"
         let byteOffset = this.GetFlagByteOffset(flagIndex)
         let bitSelector = ~(this.GetFlagBitSelector(flagIndex))
-        this.saveData[byteOffset] &= bitSelector
+        // Bitwise AND assignment with not, keeps all set
+        // bits in the byte except the flag
+        this.saveData[byteOffset] &= ~bitSelector
     }
 
     // Variables
