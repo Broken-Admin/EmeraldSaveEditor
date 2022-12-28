@@ -212,7 +212,7 @@ export class GameSave {
     }
 
     ClearFlag(flagIndex: number): void {
-        if(this.CheckFlagIndexInRange(flagIndex)) throw "Outside of the scope of possible flags"
+        this.CheckFlagIndexInRange(flagIndex)
         let byteOffset = this.GetFlagByteOffset(flagIndex)
         let bitSelector = ~(this.GetFlagBitSelector(flagIndex))
         // Bitwise AND assignment with not, keeps all set
