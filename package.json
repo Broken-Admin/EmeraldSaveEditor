@@ -1,0 +1,19 @@
+{
+  "name": "eesavereader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "npm": "^9.2.0",
+    "typescript": "^4.9.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.17"
+  },
+  "scripts": {
+    "test": "npm run tsc && node .\\build\\index.js",
+    "tsc": "tsc"
+  },
+  "author": "",
+  "license": "ISC"
+}
