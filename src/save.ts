@@ -139,8 +139,12 @@ export class GameSave {
         return sum == MemoryValues.SectionIdSum
     }
 
+    FetchSectionOffset(sectionIndex: number): number {
+        return sectionIndex * MemoryValues.sectionSize
+    }
+
     FetchSection(sectionIndex: number): Uint8Array {
-        let sectionOffset = sectionIndex * MemoryValues.sectionSize;
+        let sectionOffset = this.FetchSectionOffset(sectionIndex)
         return this.saveData.slice(sectionOffset, sectionOffset + MemoryValues.sectionSize)
     }
 
