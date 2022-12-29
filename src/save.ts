@@ -173,8 +173,6 @@ export class GameSave {
     }
 
     // Flags
-    // Trainer Flags
-    // Trainer flags occupy 0x500 - 0x85F, the last 9 of which are unused
 
     // Confirms that the offset is 16 bits or less
     CheckFlagIndexInRange(flagIndex: number): boolean {
